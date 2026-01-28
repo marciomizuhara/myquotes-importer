@@ -1,0 +1,47 @@
+# =========================
+# Python / Virtualenv
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+data/
+Lib/
+Scripts/
+include/
+pyvenv.cfg
+.venv/
+venv/
+
+# =========================
+# IDE
+# =========================
+.idea/
+.vscode/
+
+# =========================
+# Local databases & cache
+# =========================
+database.db
+*.sqlite
+*.sqlite3
+vocabulary_cache.json
+
+# =========================
+# ETL generated files
+# =========================
+*.xlsx
+
+# =========================
+# Supabase / DB backups
+# =========================
+db_backups/
+*.sql
+*.dump
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
