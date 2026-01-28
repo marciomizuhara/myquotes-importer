@@ -55,11 +55,11 @@ The importer follows a clear, staged ETL design:
 
 ## Project Structure
 
-importer/
-├── kindle/ # Kindle detection and file copying
-├── processing/ # Parsing, validation, and transformation logic
-├── persistence/ # Database imports, caching, and backups
-└── config.py # Pipeline configuration
+importer/  
+├── kindle/ # Kindle detection and file copying  
+├── processing/ # Parsing, validation, and transformation logic  
+├── persistence/ # Database imports, caching, and backups  
+└── config.py # Pipeline configuration  
 
 ---
 
@@ -67,27 +67,19 @@ importer/
 
 ```bash
 python import_excel.py
-
+```
 A successful run will:
-
-Detect and copy Kindle clippings (or use a backup)
-
-Process and normalize highlights
-
-Import quotes and ratings
-
-Import vocabulary entries
-
-Generate a database backup
+- Detect and copy Kindle clippings (or use a backup)
+- Process and normalize highlights
+- Import quotes and ratings
+- Import vocabulary entries
+- Generate a database backup
 
 ## Relationship to MyQuotes
 
 This repository provides the data ingestion layer for the MyQuotes application.
-
-myquotes-importer: ETL, normalization, persistence
-
-myquotes-flutter: Flutter client consuming structured data via RPC and SQL-backed services
-
+- myquotes-importer: ETL, normalization, persistence
+- myquotes-flutter: Flutter client consuming structured data via RPC and SQL-backed services  
 Together, they form a full-stack, data-driven literary application.
 
 ## License
