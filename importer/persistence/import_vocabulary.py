@@ -102,6 +102,9 @@ def import_vocabulary(vocabularies_detected: list[dict]):
             if book_title and loc_start is not None:
                 vocab_cache.mark(book_title, int(loc_start))
 
+        # ✅ AGORA SIM persiste o cache
+        vocab_cache.save()
+
     print("✅ Vocabulary commit completed successfully.")
     print(f"🟢 Inserted: {inserted}")
     print(f"⚪ Skipped: {skipped}")

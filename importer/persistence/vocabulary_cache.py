@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 
-CACHE_FILE = Path("vocabulary_cache.json")
+CACHE_FILE = Path("data/vocabulary_cache.json")
 
 
 class VocabularyCache:

@@ -4,7 +4,7 @@ from importer.kindle.kindle_copy import copy_from_kindle
 from importer.processing.clippings import process_clippings
 from importer.persistence.import_db import import_from_excel
 from importer.persistence.import_vocabulary import import_vocabulary
-from importer.backup.backup_supabase import backup_db
+from importer.persistence.backup_supabase import backup_db
 from importer.config import INPUT_FILE, EXCEL_FILE
 
 

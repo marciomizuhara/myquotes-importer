@@ -111,9 +111,12 @@ def _choose_best_note(notes: list[dict]) -> dict | None:
             continue
 
         note_text = (n.get("note") or "").strip()
+        added_at = n.get("added_at", "")
+
         valid.append({
             "type": note_type,
             "note": note_text,
+            "added_at": added_at,
             "_has_text": bool(note_text),
         })
 
@@ -122,9 +125,11 @@ def _choose_best_note(notes: list[dict]) -> dict | None:
 
     valid.sort(
         key=lambda n: (
-            not n["_has_text"],
-            -len(n["note"]),
-        )
+            not n["_has_text"],   # notas com texto primeiro
+            n["added_at"],        # MAIS RECENTE vence
+            -len(n["note"]),      # desempate final
+        ),
+        reverse=True
     )
 
     best = valid[0]
@@ -181,7 +186,6 @@ def process_clippings(
         "Page", "Type", "Quote", "Author", "Book", "Note",
         "LocationStart", "LocationEnd",
     ])
-
 
     raw_data = input_file.read_text(encoding="utf-8")
     blocks = [b.strip() for b in raw_data.split("==========") if b.strip()]
@@ -267,6 +271,7 @@ def process_clippings(
                 "location": loc_start,
                 "book": book_title,
                 "author": author,
+                "added_at": added_at,
                 "_seq": seq,
             }
             seq += 1
@@ -278,7 +283,11 @@ def process_clippings(
                 last_h["location_start"],
                 last_h["location_end"],
             ):
-                last_h["notes"].append({"type": note_type, "note": note_text})
+                last_h["notes"].append({
+                    "type": note_type,
+                    "note": note_text,
+                    "added_at": added_at,
+                })
             else:
                 orphan_notes.append(note_obj)
 
@@ -291,7 +300,11 @@ def process_clippings(
             note_loc=n["location"],
         )
         if target is not None:
-            target["notes"].append({"type": n["type"], "note": n["note"]})
+            target["notes"].append({
+                "type": n["type"],
+                "note": n["note"],
+                "added_at": n["added_at"],
+            })
             attached_ids.add(id(n))
 
     for n in orphan_notes:
@@ -304,7 +317,11 @@ def process_clippings(
                 and h["author"] == n["author"]
                 and h["_seq"] > n["_seq"]
             ):
-                h["notes"].append({"type": n["type"], "note": n["note"]})
+                h["notes"].append({
+                    "type": n["type"],
+                    "note": n["note"],
+                    "added_at": n["added_at"],
+                })
                 break
 
     final_highlights: list[dict] = []
@@ -342,7 +359,6 @@ def process_clippings(
 
             if not _word_in_text(word, quote_text):
                 continue
-
 
             vocabularies_detected.append({
                 "book": h["book"],
