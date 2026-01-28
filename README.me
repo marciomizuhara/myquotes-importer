@@ -1,0 +1,95 @@
+# myquotes-importer
+
+Python ETL pipeline for a data-driven literary application, ingesting Kindle highlights and persisting structured data into SQL-backed services.
+
+---
+
+## Overview
+
+**myquotes-importer** is the ingestion and transformation layer of the *MyQuotes* ecosystem.
+
+It processes raw Kindle clippings (`My Clippings.txt`) and converts them into structured, queryable data, including:
+
+- Quotes
+- Ratings
+- Vocabulary
+
+The pipeline is designed to be deterministic, idempotent, and safe to run repeatedly, ensuring data integrity across imports.
+
+---
+
+## Architecture
+
+The importer follows a clear, staged ETL design:
+
+1. **Extract**
+   - Reads Kindle highlights and notes from `My Clippings.txt`
+   - Supports direct Kindle connection with fallback to a local backup
+
+2. **Transform**
+   - Associates highlights and notes by location
+   - Deduplicates overlapping highlights
+   - Classifies entries by type (quotes, ratings, vocabulary)
+   - Applies semantic validation for vocabulary extraction
+
+3. **Load**
+   - Persists quotes and ratings into a SQL-backed database
+   - Persists vocabulary in a dedicated stage with strict idempotency
+   - Applies caching only after successful commits
+
+4. **Backup**
+   - Generates a SQL backup of the database after a successful pipeline run
+
+---
+
+## Key Features
+
+- Robust highlight ↔ note association by location
+- Safe deduplication of overlapping highlights
+- Explicit separation of quotes, ratings, and vocabulary
+- Semantic validation for vocabulary entries
+- Idempotent imports using cache-based guards
+- Automated database backup after successful imports
+
+---
+
+## Project Structure
+
+importer/
+├── kindle/ # Kindle detection and file copying
+├── processing/ # Parsing, validation, and transformation logic
+├── persistence/ # Database imports, caching, and backups
+└── config.py # Pipeline configuration
+
+---
+
+## Running the Pipeline
+
+```bash
+python import_excel.py
+
+A successful run will:
+
+Detect and copy Kindle clippings (or use a backup)
+
+Process and normalize highlights
+
+Import quotes and ratings
+
+Import vocabulary entries
+
+Generate a database backup
+
+## Relationship to MyQuotes
+
+This repository provides the data ingestion layer for the MyQuotes application.
+
+myquotes-importer: ETL, normalization, persistence
+
+myquotes-flutter: Flutter client consuming structured data via RPC and SQL-backed services
+
+Together, they form a full-stack, data-driven literary application.
+
+## License
+
+This project is provided for educational and personal use.
