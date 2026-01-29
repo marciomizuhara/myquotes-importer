@@ -81,6 +81,7 @@ def import_vocabulary(vocabularies_detected: list[dict]):
                 notes=None,
                 page=v.get("page"),
                 is_active=1,
+                status="again",
             )
 
             db.session.add(vocab)

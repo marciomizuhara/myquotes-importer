@@ -33,8 +33,8 @@ def main():
 
     time.sleep(1)
 
-    print("💾 Creating Supabase SQL backup...")
-    backup_db()
+    # print("💾 Creating Supabase SQL backup...")
+    # backup_db()
 
     print("✅ Import pipeline finished successfully.")
 

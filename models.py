@@ -72,3 +72,5 @@ class Vocabulary(db.Model):
 
     is_favorite = db.Column(db.Integer, default=0)
     is_active = db.Column(db.Integer, default=1)
+
+    status = db.Column(db.String)

@@ -116,7 +116,7 @@ def _choose_best_note(notes: list[dict]) -> dict | None:
         valid.append({
             "type": note_type,
             "note": note_text,
-            "added_at": added_at,
+            "added_at": n.get("added_at", ""),
             "_has_text": bool(note_text),
         })
 
@@ -125,9 +125,9 @@ def _choose_best_note(notes: list[dict]) -> dict | None:
 
     valid.sort(
         key=lambda n: (
-            not n["_has_text"],   # notas com texto primeiro
-            n["added_at"],        # MAIS RECENTE vence
-            -len(n["note"]),      # desempate final
+            n["added_at"],  # ⏰ MAIS RECENTE VENCE
+            n["_has_text"],
+            len(n["note"]),
         ),
         reverse=True
     )
