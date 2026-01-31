@@ -65,7 +65,10 @@ class Vocabulary(db.Model):
     location_end = db.Column(db.Integer, nullable=False)
 
     text = db.Column(db.Text, nullable=False)
+    translation = db.Column(db.Text)          # ✅ tradução da frase
+
     word = db.Column(db.Text)
+    translated_word = db.Column(db.Text)      # ✅ tradução do termo
 
     notes = db.Column(db.Text)
     page = db.Column(db.Text)
@@ -73,4 +76,5 @@ class Vocabulary(db.Model):
     is_favorite = db.Column(db.Integer, default=0)
     is_active = db.Column(db.Integer, default=1)
 
-    status = db.Column(db.String)
+    status = db.Column(db.String)              # again / hard / good / easy
+

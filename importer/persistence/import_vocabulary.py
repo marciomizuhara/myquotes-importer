@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from importer.persistence.vocabulary_cache import VocabularyCache
+from importer.services.translation_service import TranslationService
 
 from app import app, db
 from models import Book, Vocabulary
@@ -72,12 +73,46 @@ def import_vocabulary(vocabularies_detected: list[dict]):
                 skipped += 1
                 continue
 
+            text_en = (v.get("text") or "").strip()
+
+            translation = None
+            translated_word = None
+
+            # 🔹 traduz trecho (sentence)
+            if text_en:
+                try:
+                    translation = TranslationService.translate_to_pt_br(text_en)
+                    print(
+                        f"🌍 ETL | Translated text | "
+                        f"Book: {book.title} | Word: {word}"
+                    )
+                except Exception as e:
+                    print(
+                        f"⚠️ ETL | Text translation failed | "
+                        f"Book: {book.title} | Word: {word} | {e}"
+                    )
+
+            # 🔹 traduz termo isolado
+            try:
+                translated_word = TranslationService.translate_to_pt_br(word)
+                print(
+                    f"🌍 ETL | Translated word | "
+                    f"Book: {book.title} | {word} → {translated_word}"
+                )
+            except Exception as e:
+                print(
+                    f"⚠️ ETL | Word translation failed | "
+                    f"Book: {book.title} | Word: {word} | {e}"
+                )
+
             vocab = Vocabulary(
                 book_id=book.id,
                 location_start=int(loc_start),
                 location_end=int(v.get("location_end") or loc_start),
-                text=(v.get("text") or "").strip(),
+                text=text_en,
+                translation=translation,
                 word=word,
+                translated_word=translated_word,
                 notes=None,
                 page=v.get("page"),
                 is_active=1,
@@ -103,7 +138,7 @@ def import_vocabulary(vocabularies_detected: list[dict]):
             if book_title and loc_start is not None:
                 vocab_cache.mark(book_title, int(loc_start))
 
-        # ✅ AGORA SIM persiste o cache
+        # ✅ persiste o cache
         vocab_cache.save()
 
     print("✅ Vocabulary commit completed successfully.")

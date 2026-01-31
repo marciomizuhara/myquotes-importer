@@ -66,7 +66,7 @@ importer/
 ## Running the Pipeline
 
 ```bash
-python import_excel.py
+python run_etl.py
 ```
 A successful run will:
 - Detect and copy Kindle clippings (or use a backup)
