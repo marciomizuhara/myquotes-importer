@@ -4,6 +4,7 @@ from app import app, db
 from models import Book, Quote
 from importer.config import EXCEL_FILE
 from importer.persistence.cache import load_cache, save_cache
+from importer.processing.author_normalizer import normalize_author
 
 
 DEFAULT_QUOTE_TYPE = 2  # 🟡 Amarelo (tipo padrão do domínio)
@@ -53,9 +54,22 @@ def import_from_excel(ratings_detected):
 
             book = existing_books.get(book_key)
             if not book:
+                normalized_author = (
+                    normalize_author(row['Author'].strip())
+                    if pd.notna(row['Author'])
+                    else 'Unknown'
+                )
+
+                print(
+                    f"📚 New book detected | "
+                    f"Title: {book_title} | "
+                    f"Original author: {row['Author']} | "
+                    f"Normalized: {normalized_author}"
+                )
+
                 book = Book(
                     title=book_title,
-                    author=row['Author'].strip() if pd.notna(row['Author']) else 'Unknown'
+                    author=normalized_author
                 )
                 db.session.add(book)
                 db.session.flush()

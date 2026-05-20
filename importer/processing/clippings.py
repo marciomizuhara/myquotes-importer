@@ -4,6 +4,7 @@ import re
 from pathlib import Path
 from openpyxl import Workbook
 
+from importer.processing.author_normalizer import normalize_author
 from importer.processing.highlight_validation import (
     is_valid_highlight,
     is_fragment_quote,
@@ -111,7 +112,6 @@ def _choose_best_note(notes: list[dict]) -> dict | None:
             continue
 
         note_text = (n.get("note") or "").strip()
-        added_at = n.get("added_at", "")
 
         valid.append({
             "type": note_type,
@@ -209,6 +209,7 @@ def process_clippings(
         if "(" in book_info and ")" in book_info:
             book_title = book_info.split("(")[0].strip()
             author = book_info.split("(")[-1].replace(")", "").strip()
+            author = normalize_author(author)
         else:
             book_title = book_info.strip()
             author = "Unknown"
